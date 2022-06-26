@@ -4,12 +4,21 @@ import datetime
 import json
 import sql_appbk
 import time
+import platform
+
 #es 搜索
 #文档https://elasticsearch-py.readthedocs.io/en/7.9.0/
 #pip3 install elasticsearch==7.9.0
 
+#数据库
+#带选择数据库功能
+node = platform.node()
+online_nodes = ["n1.appbk.com","iZj6ccepuz1ebnidz3cwfxZ"] #线上服务器列表
+if node in online_nodes: #线上内网
+    ES = Elasticsearch(["http://localhost:9200"])
+else:
+    ES = Elasticsearch(["http://47.242.206.108:9200"])
 
-ES = Elasticsearch(["http://47.242.206.108:9200"])
 ES_INDEX = "flow_code"
 
 
@@ -41,6 +50,8 @@ def search_es(query="NFT", start=0, limit=10):
         score = item["_score"] #文档得分
         data = item["_source"]
         data["_score"] = score #es得分
+        data["url"] = "https://flow-view-source.com/mainnet/account/{}/contract/{}".format(data["contract_address"], data["contract_name"])
+
 
         #飘红
         contract_name = item["_source"]["contract_name"] # 默认使用原来的标题
@@ -54,7 +65,6 @@ def search_es(query="NFT", start=0, limit=10):
 
         data["contract_name"] = contract_name
         data["contract_code"] = contract_code
-        data["url"] = "https://flow-view-source.com/mainnet/account/{}/contract/{}".format(data["contract_address"], data["contract_name"])
 
 
 
