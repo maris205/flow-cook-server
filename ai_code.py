@@ -64,6 +64,7 @@ def generate_box_contract(name="Wow", quality_prob={}):
 返回：vue代码
 """
 def generate_box_vue(name="Wow", contract_address="0x01", quality_prob={}):
+    print(quality_prob)
     global BOX_TEMPLATE_VUE #vue合约字符串
     #step 1,替换合约名称
     vue_code = BOX_TEMPLATE_VUE.replace('{CONTRACT_NAME}', name)
@@ -75,10 +76,9 @@ def generate_box_vue(name="Wow", contract_address="0x01", quality_prob={}):
     #先构造
     item_prob_list = []
     for key in quality_prob:
-        name = key
         prob = quality_prob[key]
         data = {
-                "name": name,
+                "name": key,
                 "prob": prob
             }
         item_prob_list.append(data)
@@ -89,8 +89,6 @@ def generate_box_vue(name="Wow", contract_address="0x01", quality_prob={}):
     prizes_list = []
     i = 0
     for key in quality_prob:
-        name = key
-        prob = quality_prob[key]
         if 0==i%2:
             color = '#e9e8fe'
         else:
@@ -98,7 +96,7 @@ def generate_box_vue(name="Wow", contract_address="0x01", quality_prob={}):
 
         data = {
                 "background": color,
-                "fonts": [{"text": name, "top": '10%'}]
+                "fonts": [{"text": key, "top": '10%'}]
             }
         prizes_list.append(data)
         i = i + 1

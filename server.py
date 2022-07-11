@@ -95,12 +95,18 @@ class box_code:
         name = param.name #合约名称
         code_type = param.code_type #行业类型，token，nft
         contract_address = param.contract_address #合约地址
-        quality_prob = json.loads(param.quality_prob) #概率分布，字符串，如{"纸巾":0.5, "鼠标":0.3, "键盘":0.14,"iPad":0.05,"Macbook":0.01}
+        quality_prob = json.loads(param.quality_prob) #概率分布，字符串，如[{'name': 'pen', 'prob': 0.5}, {'name': 'keyboard', 'prob': 0.4}, {'name': 'ipad', 'prob': 0.1}]
+
+        item_prob = {}
+        for item in quality_prob:
+            key = item["name"]
+            value = item["prob"]
+            item_prob[key] = value
 
         if "cadence" == code_type:
-            code = ai_code.generate_box_contract(name, quality_prob)
+            code = ai_code.generate_box_contract(name, item_prob)
         else:
-            code = ai_code.generate_box_vue(name, contract_address, quality_prob)
+            code = ai_code.generate_box_vue(name, contract_address, item_prob)
 
         final_result = {
             "status" : 0,
